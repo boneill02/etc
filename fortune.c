@@ -1,4 +1,4 @@
-/* simple fortune implementation. License: MIT */
+/* simple fortune(1) implementation. License: MIT */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,4 +1,9 @@
-/* typetest.c: a simple typing speed test. not super accurate */
+/*
+ * typetest.c: a simple typing speed test. not super accurate.
+ * prints a file line by line and has user reproduce the line.
+ * records WPM, CPM, number of mistakes, total time.
+ * usage: typetest file
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

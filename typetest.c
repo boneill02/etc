@@ -1,15 +1,15 @@
 /*
- * typetest.c: a simple typing speed test. not super accurate.
- * prints a file line by line and has user reproduce the line.
- * records WPM, CPM, number of mistakes, total time.
+ * typetest.c: a simple typing speed test. not very precise. prints a
+ * given file line by line and has user reproduce each one. records
+ * WPM, CPM, number of mistakes, and total time.
  * usage: typetest file
+ * author: Ben O'Neill <ben@benoneill.xyz>
+ * license: MIT
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-const char *sample_test = "Porro molestias eius maiores reprehenderit rerum.";
 
 struct result_s {
 	unsigned int mistakes, total_time, num_words;
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 			"%f\nWords per minute: %f\nTotal time: %d seconds\n",
 			r.mistakes, ((float) 60) / r.average_time,
 			60 / ((float) r.total_time / r.num_words), r.total_time);
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 /*

@@ -1,6 +1,6 @@
 /*
- * typetest.c: a simple typing speed test. not very precise. prints a
- * given file line by line and has user reproduce each one. records
+ * typetest.c: A simple typing speed test. Not very precise. Prints a
+ * given file line by line and has user reproduce each one. It records
  * WPM, CPM, number of mistakes, and total time.
  * usage: typetest file
  * author: Ben O'Neill <ben@benoneill.xyz>
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 }
 
 /*
- * replicate the given file line by line, no time limit.
+ * replicate the given file line by line, with no time limit.
  * content: string to replicate
  * returns: number of mistakes, average, and total times as result_t
  */

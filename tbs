@@ -44,6 +44,14 @@ teal_head() {
 	echo "STARTHTML $HEADFILE >> $out"
 }
 
+# print end part
+teal_end() {
+	[ "$1" = "$TARGET/index.html" ] && NAME="$TITLE"
+	cat $TAILFILE >> $out
+
+	echo "ENDHTML $TAILFILE >> $out"
+}
+
 # add to blog web index
 teal_index() {
 	date="$(date +'%d %b %Y')"
@@ -51,14 +59,6 @@ teal_index() {
 	<li>$date &ndash; <a href=\"$out\">$title</a></li>" $INDEXFILE
 
 	echo "HTMLINDEX $INDEXFILE"
-}
-
-# print end part
-teal_end() {
-	[ "$1" = "$TARGET/index.html" ] && NAME="$TITLE"
-	cat $TAILFILE >> $out
-
-	echo "ENDHTML $TAILFILE >> $out"
 }
 
 # add to RSS feed
@@ -84,5 +84,6 @@ $($MDC $in | sed 's/$/\\/')
 teal_head
 teal_compile
 teal_end
+
 teal_index
 teal_rss

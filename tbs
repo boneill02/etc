@@ -3,6 +3,18 @@
 # usage: "tbs input.md output.html title"
 #
 # this is a simple blog system with rss support.
+# before using, do the following:
+# * edit $HEADFILE, $TAILFILE, $INDEXFILE, $MDC, and $URL to fit your needs.
+# * create a RSS file skeleton with a line containing "<!-- list -->". this is
+#   where new entries will be added.
+# * create your HEADFILE, TAILFILE, and INDEXFILE. 
+# * put the string "TITLE" in HEADFILE where the title of the entry will be
+#   entered (probably in <title>).
+# * put "<!-- list -->" in a HTML list tag in INDEXFILE. this is where links to
+#   the web entries will be added.
+#
+# examples are in examples/tbs
+
 
 # edit these for configuration
 HEADFILE="head.html" # this will be put in the HTML page before the main content
@@ -29,7 +41,7 @@ teal_head() {
 	echo "STARTHTML $HEADFILE >> $out"
 }
 
-# add to blog index
+# add to blog web index
 teal_index() {
 	date="$(date +'%d %b %Y')"
 	sed -i "/<\!-- list -->/a \

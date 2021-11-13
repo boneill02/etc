@@ -33,23 +33,18 @@ title="$3"
 # compile webpage content from markdown to html
 teal_compile() {
 	$MDC $in >> $out
-
 	echo "MDC $in >> $out"
 }
 
 # print beginning section of html (before main content and sidebar)
 teal_head() {
-	[ "$1" = "$TARGET/index.html" ] && NAME="$TITLE"
-	sed "s/TITLE/$TITLE/" $HEADFILE > $out
-
+	sed "s/TITLE/$title/" $HEADFILE > $out
 	echo "STARTHTML $HEADFILE >> $out"
 }
 
 # print end part
 teal_end() {
-	[ "$1" = "$TARGET/index.html" ] && NAME="$TITLE"
 	cat $TAILFILE >> $out
-
 	echo "ENDHTML $TAILFILE >> $out"
 }
 
@@ -58,14 +53,12 @@ teal_index() {
 	date="$(date +'%d %b %Y')"
 	sed -i "/<\!-- list -->/a \
 	<li>$date &ndash; <a href=\"$out\">$title</a></li>" $INDEXFILE
-
 	echo "HTMLINDEX $INDEXFILE"
 }
 
 # add to RSS feed
 teal_rss() {
 	date="$(date +"%a, %d %b %Y %H:%m:%S %z")"
-
 	sed -i "/<\!-- list -->/a\
 		<item>\
 		<title>$title</title>\
@@ -75,7 +68,6 @@ teal_rss() {
 $($MDC $in | sed 's/$/\\/')
 ]]></description>\
 </item>" $RSSFILE
-
 	echo "RSS $RSSFILE"
 }
 
@@ -85,6 +77,5 @@ $($MDC $in | sed 's/$/\\/')
 teal_head
 teal_compile
 teal_end
-
 teal_index
 teal_rss

@@ -50,6 +50,10 @@ void interpret() {
 			break;
 		case '<':
 			tp--;
+			if (tp < 0) {
+				fprintf(stderr, "tape pointer out of bounds.\n");
+				exit(1);
+			}
 			break;
 		case ',':
 			char c = fgetc(stdin);
@@ -95,7 +99,7 @@ void run() {
 
 int main(int argc, char *argv[]) {
 	if (argc < 2) {
-		printf("usage: %s progfile\n", argv[0]);
+		fprintf(stderr, "usage: %s progfile\n", argv[0]);
 		return 1;
 	}
 
@@ -109,11 +113,11 @@ int main(int argc, char *argv[]) {
 		if (prog) {
 			fread(prog, 1, program_len, f);
 		} else {
-			printf("can't allocate memory for program storage.\n");
+			fprintf(stderr, "can't allocate memory for program storage.\n");
 		}
 		fclose(f);
 	} else {
-		printf("can't open file.\n");
+		fprintf(stderr, "can't open file.\n");
 		return 1;
 	}
 

@@ -99,7 +99,6 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-
 	FILE *f = fopen(argv[1], "r");
 	if (f) {
 		fseek(f, 0, SEEK_END);
@@ -109,8 +108,13 @@ int main(int argc, char *argv[]) {
 		prog = malloc(program_len);
 		if (prog) {
 			fread(prog, 1, program_len, f);
+		} else {
+			printf("can't allocate memory for program storage.\n");
 		}
 		fclose(f);
+	} else {
+		printf("can't open file.\n");
+		return 1;
 	}
 
 	run();

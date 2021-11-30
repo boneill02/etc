@@ -11,12 +11,10 @@
 #include <string.h>
 #include <time.h>
 
-struct result_s {
+typedef struct {
 	unsigned int mistakes, total_time, num_words;
 	float average_time;
-};
-
-typedef struct result_s result_t;
+} result_t;
 
 result_t replication_test(FILE *);
 

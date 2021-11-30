@@ -2,6 +2,7 @@
  * brainfuck interpreter
  */
 #define MAX_LOOPS 2048
+#define TAPE_SIZE 30000
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,7 +13,7 @@ typedef struct {
 } Loop;
 
 char *prog;
-uint8_t tape[1024];
+uint8_t tape[TAPE_SIZE];
 uint16_t stack[64];
 uint16_t tp, ip, sp;
 Loop loops[MAX_LOOPS];

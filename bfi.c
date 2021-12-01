@@ -3,6 +3,7 @@
  */
 #define MAX_LOOPS 2048
 #define TAPE_SIZE 30000
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,10 +13,12 @@ typedef struct {
 	uint16_t start, end;
 } Loop;
 
+bool debug = false;
 char *prog;
 uint8_t tape[TAPE_SIZE];
-uint16_t tp, ip;
+uint16_t tp = 0, ip = 0, tp_max = 0;
 Loop loops[MAX_LOOPS];
+
 size_t program_len;
 size_t num_loops;
 
@@ -37,6 +40,15 @@ void build_loops() {
 	}
 }
 
+void diagnose() {
+	fprintf(stderr, "Tape pointer: %d\nInstruction pointer: %d\n", tp, ip);
+
+	/* print memory map. maybe consider outputting to file */
+	for (int i = 0; i < tp_max; i++) {
+		fprintf(stderr, "%d: %d\n", i, tape[i]);
+	}
+}
+
 void interpret() {
 	switch (prog[ip]) {
 		case '+':
@@ -47,6 +59,9 @@ void interpret() {
 			break;
 		case '>':
 			tp++;
+			if (tp > tp_max) {
+				tp_max = tp; // increase max memory address for debug
+			}
 			break;
 		case '<':
 			tp--;
@@ -84,12 +99,15 @@ void interpret() {
 				}
 			}
 			break;
+		case '#':
+			if (debug) {
+				diagnose();
+			}
+			break;
 	}
 }
 
 void run() {
-	tp = 0;
-
 	build_loops();
 	for (ip = 0; ip < program_len; ip++) {
 		interpret(prog[ip]);
@@ -97,12 +115,13 @@ void run() {
 }
 
 int main(int argc, char *argv[]) {
-	if (argc < 2) {
-		fprintf(stderr, "usage: %s progfile\n", argv[0]);
-		return 1;
+	if (argc == 3 && !strcmp(argv[1], "-d")) {
+		debug = true;
+	} else if (argc != 2) {
+		fprintf(stderr, "usage: %s [-d] file\n", argv[1]);
 	}
 
-	FILE *f = fopen(argv[1], "r");
+	FILE *f = fopen(argv[argc - 1], "r");
 	if (f) {
 		fseek(f, 0, SEEK_END);
 		program_len = ftell(f);

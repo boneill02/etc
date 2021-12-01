@@ -14,7 +14,7 @@ typedef struct {
 
 char *prog;
 uint8_t tape[TAPE_SIZE];
-uint16_t tp, ip, sp;
+uint16_t tp, ip;
 Loop loops[MAX_LOOPS];
 size_t program_len;
 size_t num_loops;
@@ -89,7 +89,6 @@ void interpret() {
 
 void run() {
 	tp = 0;
-	sp = 0;
 
 	build_loops();
 	for (ip = 0; ip < program_len; ip++) {

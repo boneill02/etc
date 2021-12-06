@@ -43,7 +43,7 @@ void build_loops() {
 void diagnose() {
 	fprintf(stderr, "Tape pointer: %d\nInstruction pointer: %d\n", tp, ip);
 
-	/* print memory map. maybe consider outputting to file */
+	/* print memory map */
 	for (int i = 0; i < tp_max; i++) {
 		fprintf(stderr, "%d: %d\n", i, tape[i]);
 	}
@@ -131,11 +131,12 @@ int main(int argc, char *argv[]) {
 		if (prog) {
 			fread(prog, 1, program_len, f);
 		} else {
-			fprintf(stderr, "can't allocate memory for program storage.\n");
+			fprintf(stderr, "error: can't allocate memory for program storage.\n");
+			return 1;
 		}
 		fclose(f);
 	} else {
-		fprintf(stderr, "can't open file.\n");
+		fprintf(stderr, "error: can't open file.\n");
 		return 1;
 	}
 

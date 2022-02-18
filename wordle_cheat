@@ -1,0 +1,10 @@
+#!/bin/sh
+# wordle_help: wordle "cheat" script
+# usage: wordle_help green yellow
+# input your "green" letters in this format, with .'s marking unknown spaces: ".f..y" (f in the second spot, y in the last spot)
+# input your "yellow" letters in any order
+
+DICTFILE="/usr/share/dict"
+
+awkexp="$(echo "$2" | sed 's,.,/&/\&\&,g;s,..$,,')"
+sed -n "/^$1.$/p" $DICTFILE | awk $awkexp

@@ -65,14 +65,10 @@ void interpret() {
 			break;
 		case '<':
 			tp--;
-			if (tp < 0) {
-				fprintf(stderr, "tape pointer out of bounds.\n");
-				exit(1);
-			}
 			break;
 		case ',':
 			char c = fgetc(stdin);
-			/* for reading files (EOF = -1, will overflow on uint8_t) */
+			/* for reading files (EOF = -1, will overflow uint8_t) */
 			if (c == EOF) {
 				c = 0;
 			}
@@ -104,6 +100,12 @@ void interpret() {
 				diagnose();
 			}
 			break;
+	}
+
+
+	if (tp < 0 || tp >= TAPE_SIZE) {
+		fprintf(stderr, "tape pointer out of bounds.\n");
+		exit(1);
 	}
 }
 

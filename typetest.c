@@ -3,20 +3,21 @@
  * given file line by line and has user reproduce each one. It records
  * WPM, CPM, number of mistakes, and total time.
  * usage: typetest file
- * author: Ben O'Neill <ben@benoneill.xyz>
+ * author: Ben O'Neill <ben@oneill.sh>
  * license: MIT
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+#include <sys/time.h>
 
 typedef struct {
-	unsigned int mistakes, total_time, num_words;
-	float average_time;
+	unsigned int mistakes, charCount, wordCount;
+	float totalTime, averageTime;
 } result_t;
 
-result_t replication_test(FILE *);
+static void replication_test(FILE *, result_t *);
 
 int main(int argc, char *argv[])
 {
@@ -34,12 +35,14 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	r = replication_test(fp);
+	replication_test(fp, &r);
 	fclose(fp);
 	printf("Number of mistakes: %d\nCharacters per minute: "
-			"%f\nWords per minute: %f\nTotal time: %d seconds\n",
-			r.mistakes, ((float) 60) / r.average_time,
-			60 / ((float) r.total_time / r.num_words), r.total_time);
+			"%f\nWords per minute: %f\nTotal time (ms): %f\n",
+			r.mistakes,
+			(60.0 * 1000 * 1000)  / r.averageTime,
+			(60.0 * 1000 * 1000) / (r.totalTime / r.wordCount),
+			r.totalTime / 1000);
 	return EXIT_SUCCESS;
 }
 
@@ -48,40 +51,37 @@ int main(int argc, char *argv[])
  * content: string to replicate
  * returns: number of mistakes, average, and total times as result_t
  */
-result_t replication_test(FILE *fp)
-{
-	int mistakes = 0, c, i;
+static void replication_test(FILE *fp, result_t *r) {
+	struct timeval start, stop;
 	size_t len = 0;
-	size_t total_len = 0, words = 0;
-	ssize_t read;
+	size_t words = 0, chars = 0;
 	char *line = NULL;
-	time_t start_time, end_time;
-	result_t r;
 
-	start_time = time(NULL);
+	int read;
+	gettimeofday(&start, NULL);	
 	while ((read = getline(&line, &len, fp)) != EOF) {
 		printf("%s> ", line);
 
-		total_len += read - 1;
-		for (i = 0; i < read; i++) {
-			if (line[i] == ' ' || line[i] == '\n')
+		for (int i = 0; i < read; i++) {
+			if (line[i] == ' ' || line[i] == '\n') {
 				words++;
+			} else {
+				chars++;
+			}
 
-			c = getchar();
+			char c = getchar();
 			if (c == '\b') {
 				i--;
 			} else if (c != line[i]) {
-				mistakes++;
+				r->mistakes++;
 			} else if (c == '\n') {
 				continue;
 			}
 		}
 	}
-	end_time = time(NULL);
+	gettimeofday(&stop, NULL);	
 
-	r.mistakes = mistakes;
-	r.num_words = words;
-	r.total_time = end_time - start_time;
-	r.average_time = ((float) r.total_time) / total_len;
-	return r;
+	r->wordCount = words;
+	r->totalTime = stop.tv_usec - start.tv_usec;
+	r->averageTime = r->totalTime / r->wordCount;
 }
